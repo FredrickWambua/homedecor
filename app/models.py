@@ -37,38 +37,20 @@ class User(UserMixin,db.Model):
       comments = db.relationship('Comment')
       bio = db.Column(db.String(255))
       profile_pic_path = db.Column(db.String(80))
-
+          
+    
 @classmethod
-        search_result = cls.objects.filter(image_category__cat_name__icontains=search_term)
-        return search_result
-
-    @classmethod
-    def get_image_by_id(cls,incoming_id):
-        image_result = cls.objects.get(id=incoming_id)
-        return image_result
-
-    def save_image(self):
-        self.save()
-    def delete_image(self):
-        self.delete()
-
-        
-    @classmethod
-    def retrieve_all(cls):
+def retrieve_all(cls):
         all_objects = Image.objects.all()
         for item in all_objects:
             return item
 
 
-    @classmethod
-    def update_image(cls,current_value,new_value):
+@classmethod
+def update_image(cls,current_value,new_value):
         fetched_object = Image.objects.filter(image_name=current_value).update(image_name=new_value)
         return fetched_object
 
-    @classmethod
-    def filter_by_location(cls,location):
-        filtered_result = cls.objects.filter(image_location__location_name__icontains=location)
-        return filtered_result
     
 
 
