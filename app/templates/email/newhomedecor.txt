@@ -1,0 +1,10 @@
+Dear Subscriber!
+
+Sign in and check out this new blog and comment
+
+Title: {{newHomedecor.title_homedecor}}
+Post: {{newHomedecor.description|truncate(50)}}
+
+
+Yours sincerely,
+MyHomedecor Admin.
