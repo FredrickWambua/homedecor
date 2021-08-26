@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 class Config:
     pass
 
@@ -12,3 +13,7 @@ config_options={
 'development':DevConfig,
 'production':ProdConfig
 }
+=======
+
+    
+>>>>>>> origin/ft-models
