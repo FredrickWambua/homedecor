@@ -1,55 +1,56 @@
+from . import db,login_manager
 from datetime import datetime
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from flask import current_app
+from flask_login import UserMixin,current_user
 from werkzeug.security import generate_password_hash,check_password_hash
-from app import db, login_manager
-from flask_login import UserMixin
 
-class Category(db.Model):
-    cat_name = db.CharField(max_length=40, unique=True)
+class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(255),unique = True,nullable = False)
+    email  = db.Column(db.String(255),unique = True,nullable = False)
+    secure_password = db.Column(db.String(255),nullable = False)
+    bio = db.Column(db.String(255))
+    profile_pic_path = db.Column(db.String())
     
+
+    @property
+    def set_password(self):
+        raise AttributeError('You cannot read the password attribute')
+
+    @set_password.setter
+    def password(self, password):
+        self.secure_password = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.secure_password,password) 
     
-    def __str__(self):
-        return self.cat_name
+    def save_u(self):
+        db.session.add(self)
+        db.session.commit()
 
-
-    def save_category(self):
-        self.save()
-
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+    
+    def __repr__(self):
+        return f'User {self.username}'
 
 class Image(db.Model):
-    image_name = db.CharField(max_length =30)
-    image_description = db.TextField()
-    image_path =db.ImageField(upload_to = 'gallery/')
-    image_category = db.ForeignKey(Category, on_delete=db.CASCADE)
-
-    def __str__(self):
-        return self.image_name
+    __tablename__ = 'images'
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String(255),nullable = False)
+    post = db.Column(db.Text(), nullable = False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    time = db.Column(db.DateTime, default = datetime.utcnow)
+    category = db.Column(db.String(255), index = True,nullable = False)
     
-    
-class User(UserMixin,db.Model):
-      __tablename__ = 'users'
-      id = db.Column(db.Integer,primary_key=True)
-      username = db.Column(db.String(255),index = True)
-      email = db.Column(db.String(255),unique = True,index = True)
-      pass_secure = db.Column(db.String(255))
-      pitches = db.relationship('homedecor')
-      comments = db.relationship('Comment')
-      bio = db.Column(db.String(255))
-      profile_pic_path = db.Column(db.String(80))
-          
-    
-@classmethod
-def retrieve_all(cls):
-        all_objects = Image.objects.all()
-        for item in all_objects:
-            return item
+    def save_p(self):
+        db.session.add(self)
+        db.session.commit()
 
-
-@classmethod
-def update_image(cls,current_value,new_value):
-        fetched_object = Image.objects.filter(image_name=current_value).update(image_name=new_value)
-        return fetched_object
+        
+    def __repr__(self):
+        return f'Pitch {self.post}'
 
     
 

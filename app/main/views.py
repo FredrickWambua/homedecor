@@ -2,9 +2,8 @@ from flask import render_template,request,redirect,url_for,flash
 from . import main
 from .. import db,photos
 from flask_login import login_user,logout_user,login_required,current_user
-from ..requests import getQuotes
-from .forms import BlogForm,CommentForm,updateProfile,SubscriberForm
-from ..models import Blog,Comment,User,Subscriber
+from .forms import UpdateProfile
+from ..models import User, Image
 from ..email import mail_message
 
 @main.route('/',methods = ['GET'])
@@ -30,7 +29,7 @@ def update_profile(uname):
     if user is None:
         (404)
 
-    form = updateProfile()
+    form = UpdateProfile()
 
     if form.validate_on_submit():
         user.bio = form.bio.data
