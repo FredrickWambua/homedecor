@@ -15,7 +15,7 @@ migrate = Migrate(app,db)
 
 @manager.shell
 def make_shell_context():
-    return dict(app = app, db = db, User = User, Category = Category, Image = Image)
+    return dict(app = app, db = db, User = User, Image = Image)
 
 if __name__ == '__main__':
     manager.run()
